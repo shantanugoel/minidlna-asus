@@ -51,7 +51,7 @@ monotonic_us(void)
 {
 	struct timespec ts;
 
-	syscall(__NR_clock_gettime, CLOCK_MONOTONIC, &ts);
+	syscall(__NR_gettimeofday, CLOCK_MONOTONIC, &ts);
 	return ts.tv_sec * 1000000ULL + ts.tv_nsec / 1000;
 }
 
@@ -162,7 +162,7 @@ generate_uuid(unsigned char uuid_out[16])
 	 * nanosecond intervals since 00:00:00.00, 15 October 1582 (the date of
 	 * Gregorian reform to the Christian calendar).
 	 */
-	syscall(__NR_clock_gettime, CLOCK_REALTIME, &ts);
+	syscall(__NR_gettimeofday, CLOCK_REALTIME, &ts);
 	time_all = ((u_int64_t)ts.tv_sec) * (NSEC_PER_SEC / 100);
 	time_all += ts.tv_nsec / 100;
 

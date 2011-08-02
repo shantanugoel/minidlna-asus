@@ -16,6 +16,9 @@
 # define __NR_inotify_add_watch	276
 # define __NR_inotify_rm_watch	277
 #elif defined (__mips__)
+#  define __NR_inotify_init (__NR_Linux + 284)
+#  define __NR_inotify_add_watch (__NR_Linux + 285)
+#  define __NR_inotify_rm_watch (__NR_Linux + 286)
 # if _MIPS_SIM == _MIPS_SIM_ABI32
 #  define __NR_inotify_init (__NR_Linux + 284)
 #  define __NR_inotify_add_watch (__NR_Linux + 285)

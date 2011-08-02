@@ -13,9 +13,9 @@
 #CFLAGS = -Wall -O -D_GNU_SOURCE -g -DDEBUG
 #CFLAGS = -Wall -g -Os -D_GNU_SOURCE
 CFLAGS = -Wall -g -O3 -D_GNU_SOURCE -D_FILE_OFFSET_BITS=64 \
-	 -I/usr/include/ffmpeg \
-	 -I/usr/include/libavutil -I/usr/include/libavcodec -I/usr/include/libavformat \
-	 -I/usr/include/ffmpeg/libavutil -I/usr/include/ffmpeg/libavcodec -I/usr/include/ffmpeg/libavformat
+	 -I/opt/include/ffmpeg \
+	 -I/opt/include/libavutil -I/opt/include/libavcodec -I/opt/include/libavformat \
+	 -I/opt/include/ffmpeg/libavutil -I/opt/include/ffmpeg/libavcodec -I/opt/include/ffmpeg/libavformat
 #STATIC_LINKING: CFLAGS += -DSTATIC
 #STATIC_LINKING: LDFLAGS = -static
 CC = gcc
@@ -37,7 +37,7 @@ BASEOBJS = minidlna.o upnphttp.o upnpdescgen.o upnpsoap.o \
 
 ALLOBJS = $(BASEOBJS) $(LNXOBJS)
 
-LIBS = -lpthread -lexif -ljpeg -lsqlite3 -lavformat -lavutil -lavcodec -lid3tag -lFLAC -logg -lvorbis
+LIBS = -lpthread -lexif -ljpeg -lsqlite3 -lavformat -lavutil -lavcodec -lid3tag -lFLAC -logg -lvorbis -lintl
 #STATIC_LINKING: LIBS = -lvorbis -logg -lm -lsqlite3 -lpthread -lexif -ljpeg -lFLAC -lm -lid3tag -lz -lavformat -lavutil -lavcodec -lm
 
 TESTUPNPDESCGENOBJS = testupnpdescgen.o upnpdescgen.o

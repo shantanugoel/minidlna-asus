@@ -25,7 +25,7 @@ CONFIGFILE="config.h"
 CONFIGMACRO="__CONFIG_H__"
 
 # Database path
-DB_PATH="/tmp/minidlna"
+DB_PATH="/opt/var/tmp/minidlna-trunk-cache"
 # Log path
 LOG_PATH="${DB_PATH}"
 
@@ -41,22 +41,22 @@ ${RM} ${CONFIGFILE}
 
 # Detect if there are missing headers
 # NOTE: This check only works with a normal distro
-[ ! -e "/usr/include/sqlite3.h" ] && MISSING="libsqlite3 $MISSING"
-[ ! -e "/usr/include/jpeglib.h" ] && MISSING="libjpeg $MISSING"
-[ ! -e "/usr/include/libexif/exif-loader.h" ] && MISSING="libexif $MISSING"
-[ ! -e "/usr/include/id3tag.h" ] && MISSING="libid3tag $MISSING"
-[ ! -e "/usr/include/ogg/ogg.h" ] && MISSING="libogg $MISSING"
-[ ! -e "/usr/include/vorbis/codec.h" ] && MISSING="libvorbis $MISSING"
-[ ! -e "/usr/include/FLAC/metadata.h" ] && MISSING="libflac $MISSING"
-[ ! -e "/usr/include/ffmpeg/avutil.h" -a \
-  ! -e "/usr/include/libavutil/avutil.h" -a \
-  ! -e "/usr/include/ffmpeg/libavutil/avutil.h" ] && MISSING="libavutil $MISSING"
-[ ! -e "/usr/include/ffmpeg/avformat.h" -a \
-  ! -e "/usr/include/libavformat/avformat.h" -a \
-  ! -e "/usr/include/ffmpeg/libavformat/avformat.h" ] && MISSING="libavformat $MISSING"
-[ ! -e "/usr/include/ffmpeg/avcodec.h" -a \
-  ! -e "/usr/include/libavcodec/avcodec.h" -a \
-  ! -e "/usr/include/ffmpeg/libavcodec/avcodec.h" ] && MISSING="libavcodec $MISSING"
+[ ! -e "/opt/include/sqlite3.h" ] && MISSING="libsqlite3 $MISSING"
+[ ! -e "/opt/include/jpeglib.h" ] && MISSING="libjpeg $MISSING"
+[ ! -e "/opt/include/libexif/exif-loader.h" ] && MISSING="libexif $MISSING"
+[ ! -e "/opt/include/id3tag.h" ] && MISSING="libid3tag $MISSING"
+[ ! -e "/opt/include/ogg/ogg.h" ] && MISSING="libogg $MISSING"
+[ ! -e "/opt/include/vorbis/codec.h" ] && MISSING="libvorbis $MISSING"
+[ ! -e "/opt/include/FLAC/metadata.h" ] && MISSING="libflac $MISSING"
+[ ! -e "/opt/include/ffmpeg/avutil.h" -a \
+  ! -e "/opt/include/libavutil/avutil.h" -a \
+  ! -e "/opt/include/ffmpeg/libavutil/avutil.h" ] && MISSING="libavutil $MISSING"
+[ ! -e "/opt/include/ffmpeg/avformat.h" -a \
+  ! -e "/opt/include/libavformat/avformat.h" -a \
+  ! -e "/opt/include/ffmpeg/libavformat/avformat.h" ] && MISSING="libavformat $MISSING"
+[ ! -e "/opt/include/ffmpeg/avcodec.h" -a \
+  ! -e "/opt/include/libavcodec/avcodec.h" -a \
+  ! -e "/opt/include/ffmpeg/libavcodec/avcodec.h" ] && MISSING="libavcodec $MISSING"
 if [ -n "$MISSING" ]; then
 	echo -e "\nERROR!  Cannot continue."
 	echo -e "The following required libraries are either missing, or are missing development headers:\n"
@@ -89,7 +89,7 @@ case $OS_NAME in
 		OS_URL=http://www.openbsd.org/
 		;;
 	FreeBSD)
-		VER=`grep '#define __FreeBSD_version' /usr/include/sys/param.h | awk '{print $3}'`
+		VER=`grep '#define __FreeBSD_version' /opt/include/sys/param.h | awk '{print $3}'`
 		if [ $VER -ge 700049 ]; then
 			echo "#define PFRULE_INOUT_COUNTS" >> ${CONFIGFILE}
 		fi
@@ -176,7 +176,7 @@ echo "#define USE_DAEMON" >> ${CONFIGFILE}
 echo "" >> ${CONFIGFILE}
 
 echo "/* Enable if the system inotify.h exists.  Otherwise our own inotify.h will be used. */" >> ${CONFIGFILE}
-if [ -f /usr/include/sys/inotify.h ]; then
+if [ -f /opt/include/sys/inotify.h ]; then
 echo "#define HAVE_INOTIFY_H" >> ${CONFIGFILE}
 else
 echo "/*#define HAVE_INOTIFY_H*/" >> ${CONFIGFILE}
@@ -184,7 +184,7 @@ fi
 echo "" >> ${CONFIGFILE}
 
 echo "/* Enable if the system iconv.h exists.  ID3 tag reading in various character sets will not work properly otherwise. */" >> ${CONFIGFILE}
-if [ -f /usr/include/iconv.h ]; then
+if [ -f /opt/include/iconv.h ]; then
 echo "#define HAVE_ICONV_H" >> ${CONFIGFILE}
 else
 echo -e "\nWARNING!!  Iconv support not found.  ID3 tag reading may not work."
@@ -193,7 +193,7 @@ fi
 echo "" >> ${CONFIGFILE}
 
 echo "/* Enable if the system libintl.h exists for NLS support. */" >> ${CONFIGFILE}
-if [ -f /usr/include/libintl.h ]; then
+if [ -f /opt/include/libintl.h ]; then
 echo "#define ENABLE_NLS" >> ${CONFIGFILE}
 else
 echo "/*#define ENABLE_NLS*/" >> ${CONFIGFILE}

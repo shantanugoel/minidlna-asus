@@ -63,7 +63,7 @@ time_t startup_time = 0;
 struct runtime_vars_s runtime_vars;
 int runtime_flags = INOTIFY_MASK;
 
-const char * pidfilename = "/var/run/minidlna.pid";
+const char * pidfilename = "/opt/var/run/minidlna.pid";
 
 char uuidvalue[] = "uuid:00000000-0000-0000-0000-000000000000";
 char modelname[MODELNAME_MAX_LEN] = ROOTDEV_MODELNAME;
