@@ -1,3 +1,8 @@
+NOTES BY SHANTANU GOEL (http://tech.shantanugoel.com/)
+=======
+This is a copy of Justin's MiniDLNA project to allow compilation on Asus WL-500* series of routers.
+If you have any questions about Asus specific changes, hit me up on my twitter id @shantanugoel (http://twitter.com/shantanugoel). For other queries, visit the upstream links below
+=======
 MiniDLNA project
 (c) 2009 Justin Maggard
 Portions (c) 2006-2007 Thomas Bernard
