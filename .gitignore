@@ -1,1 +1,7 @@
 import-from-cvs.sh
+*.o
+*.swp
+config.h
+minidlna
+minidlna.conf.orig
+testupnpdescgen
