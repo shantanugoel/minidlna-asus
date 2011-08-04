@@ -344,6 +344,9 @@ mime_to_ext(const char * mime, char * buf)
 #define FILTER_UPNP_GENRE                        0x00040000
 #define FILTER_UPNP_ORIGINALTRACKNUMBER          0x00080000
 #define FILTER_UPNP_SEARCHCLASS                  0x00100000
+#define FILTER_SEC                               0x00200000
+#define FILTER_SEC_CAPTION_INFO                  0x00400000
+#define FILTER_SEC_CAPTION_INFO_EX               0x00800000
 
 static u_int32_t
 set_filter_flags(char * filter, struct upnphttp *h)
@@ -467,6 +470,16 @@ set_filter_flags(char * filter, struct upnphttp *h)
 			flags |= FILTER_RES;
 			flags |= FILTER_RES_SIZE;
 		}
+    else if( strcmp(item, "sec:CaptionInfo") == 0)
+    {
+      flags |= FILTER_SEC;
+      flags |= FILTER_SEC_CAPTION_INFO;
+    }
+    else if( strcmp(item, "sec:CaptionInfoEx") == 0)
+    {
+      flags |= FILTER_SEC;
+      flags |= FILTER_SEC_CAPTION_INFO_EX;
+    }
 		item = strtok_r(NULL, ",", &saveptr);
 	}
 
@@ -741,6 +754,11 @@ callback(void *args, int argc, char **argv, char **azColName)
 		}
 		if( date && (passed_args->filter & FILTER_DC_DATE) ) {
 			ret = strcatf(str, "&lt;dc:date&gt;%s&lt;/dc:date&gt;", date);
+		}
+		if( passed_args->filter & FILTER_SEC_CAPTION_INFO_EX) {
+			/* Get bookmark */
+			int posSecond = sql_get_int_field(db, "SELECT BOOKMARK from OBJECTS where OBJECT_ID = '%s';", id);
+			ret = strcatf(str, "&lt;sec:dcmInfo&gt;CREATIONDATE=0,FOLDER=%s,BM=%d&lt;/sec:dcmInfo&gt;", parent, posSecond);
 		}
 		if( artist ) {
 			if( (*mime == 'v') && (passed_args->filter & FILTER_UPNP_ACTOR) ) {
@@ -1443,6 +1461,34 @@ SamsungGetFeatureList(struct upnphttp * h, const char * action)
 	BuildSendAndCloseSoapResp(h, resp, sizeof(resp));
 }
 
+static void
+SamsungSetBookmark(struct upnphttp * h, const char * action)
+{
+	static const char resp[] =
+            "<s:Envelope xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\""
+            " s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\">"
+            "<s:Body><u:X_SetBookmarkResponse"
+            " xmlns:u=\"urn:schemas-upnp-org:service:ContentDirectory:1\">"
+            "</u:X_SetBookmarkResponse></s:Body></s:Envelope>";
+
+	char body[512];
+	int bodylen;
+	struct NameValueParserData data;
+
+	ParseNameValue(h->req_buf + h->req_contentoff, h->req_contentlen, &data);
+	char* ObjectID  = GetValueFromNameValueList(&data, "ObjectID");
+	char* PosSecond = GetValueFromNameValueList(&data, "PosSecond");
+        if (!atoi(PosSecond))
+            PosSecond="";
+
+        /* store Bookmark into OBJECTS */
+        if( sql_exec(db, "UPDATE OBJECTS set BOOKMARK = %d where OBJECT_ID='%s'", atoi(PosSecond), ObjectID) != SQLITE_OK )
+            DPRINTF(E_WARN, L_METADATA, "Error setting bookmark %d on objectId='%s'\n", atoi(PosSecond), ObjectID);
+
+	bodylen = snprintf(body, sizeof(body), resp);
+	BuildSendAndCloseSoapResp(h, body, bodylen);
+}
+
 static const struct 
 {
 	const char * methodName; 
@@ -1462,6 +1508,7 @@ soapMethods[] =
 	{ "IsAuthorized", IsAuthorizedValidated},
 	{ "IsValidated", IsAuthorizedValidated},
 	{ "X_GetFeatureList", SamsungGetFeatureList},
+  { "X_SetBookmark", SamsungSetBookmark},
 	{ 0, 0 }
 };
 

@@ -563,7 +563,8 @@ CreateDatabase(void)
 					"REF_ID TEXT DEFAULT NULL, "
 					"CLASS TEXT NOT NULL, "
 					"DETAIL_ID INTEGER DEFAULT NULL, "
-					"NAME TEXT DEFAULT NULL"
+					"NAME TEXT DEFAULT NULL,"
+          "BOOKMARK INTEGER DEFAULT 0" /* bookmark time position in seconds [Samsung] */
 					");");
 	if( ret != SQLITE_OK )
 		goto sql_failed;
