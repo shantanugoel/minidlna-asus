@@ -1,5 +1,6 @@
 import-from-cvs.sh
 *.o
+*.sw*
 config.h
 minidlna
 minidlna.conf.orig
