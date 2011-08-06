@@ -1,6 +1,5 @@
 import-from-cvs.sh
 *.o
-config.h
 minidlna
 minidlna.conf.orig
 testupnpdescgen
